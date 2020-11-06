@@ -11,7 +11,11 @@ class FooUpdater {
 
     private final FooService service;
 
+    private final FooMapper fooMapper;
+
     public Foo execute(UUID id, @Valid() FooUpdate update) {
-        return service.update(id, update);
+        return fooMapper.toDto(
+                service.update(id, fooMapper.applyChanges(service.getOne(id), update))
+        );
     }
 }

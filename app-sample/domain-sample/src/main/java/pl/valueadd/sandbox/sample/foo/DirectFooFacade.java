@@ -7,6 +7,8 @@ import java.util.UUID;
 import pl.valueadd.sandbox.sample.foo.dto.FooCreate;
 import pl.valueadd.sandbox.sample.foo.dto.FooUpdate;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import pl.valueadd.sandbox.sample.foo.dto.FooRequest;
 import pl.valueadd.sandbox.sample.foo.dto.FoosPage;
 
@@ -21,14 +23,18 @@ class DirectFooFacade implements FooFacade {
 
     private final FooRemover deleteUseCase;
 
+    private final FooMapper mapper;
+
+    private final FooPermissionProvider permissionProvider;
+
     @Override
     public Optional<Foo> findById(UUID id) {
-        return service.findById(id);
+        return service.findById(id).map(mapper::toDto);
     }
 
     @Override
     public Foo getOne(UUID id) {
-        return service.getOne(id);
+        return mapper.toDto(service.getOne(id));
     }
 
     @Override
@@ -48,11 +54,15 @@ class DirectFooFacade implements FooFacade {
 
     @Override
     public List<Foo> findAll(FooRequest query) {
-        return service.findAll(query);
+        return service.findAll(query).stream().map(mapper::toDto).collect(Collectors.toList());
     }
 
     @Override
     public FoosPage getPage(FooRequest query) {
-        return service.getPage(query);
+        return new FoosPage(
+                permissionProvider.getList(),
+                service.count(query),
+                findAll(query)
+        );
     }
 }
