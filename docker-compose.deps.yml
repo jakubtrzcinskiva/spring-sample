@@ -1,0 +1,22 @@
+version: '3.7'
+
+services:
+  postgres:
+    container_name: ${DB_CONTAINER_NAME}
+    build:
+      context: ""
+      dockerfile: postgres.Dockerfile
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      PGDATA: /data/postgres
+    ports:
+      - ${DB_PORT_EXTERNAL}:5432
+    networks:
+      - sandbox_net
+
+
+
+networks:
+  sandbox_net:
+    name: sandbox_net
