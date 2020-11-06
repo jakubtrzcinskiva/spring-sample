@@ -10,6 +10,7 @@
   <artifactId>commons</artifactId>
   <packaging>pom</packaging>
   <modules>
+    <module>lib-test</module>
     <module>lib-request</module>
     <module>lib-eventdispatcher-base</module>
     <module>lib-request-spring</module>

@@ -10,7 +10,9 @@ class FooCreator {
 
     private final FooService service;
 
+    private final FooMapper mapper;
+
     public Foo execute(@Valid() FooCreate create) {
-        return service.create(create);
+        return mapper.toDto(service.create(mapper.toState(create)));
     }
 }

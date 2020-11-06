@@ -25,7 +25,7 @@ class FooController implements FooClient {
     private final FooFacade facade;
 
     @ApiOperation(value = "Get single Foo")
-    @PreAuthorize(value = "@permission.validate(@fooPermissionProvider.canRead(#id))")
+    @PreAuthorize(value = "@permission.validate(@fooPermissionProvider.canRead(@fooFacade.getOne(#id)))")
     public Foo getOne(@PathVariable(value = "id") UUID id) {
         return facade.getOne(id);
     }
@@ -44,7 +44,7 @@ class FooController implements FooClient {
     }
 
     @ApiOperation(value = "Update Foo")
-    @PreAuthorize(value = "@permission.validate(@fooPermissionProvider.canUpdate(#id, #update))")
+    @PreAuthorize(value = "@permission.validate(@fooPermissionProvider.canUpdate(@fooFacade.getOne(#id), #update))")
     public Foo update(@PathVariable(value = "id") UUID id, @RequestBody() FooUpdate update) {
         return facade.update(id, update);
     }
@@ -56,7 +56,7 @@ class FooController implements FooClient {
     }
 
     @ApiOperation(value = "Delete Foo")
-    @PreAuthorize(value = "@permission.validate(@fooPermissionProvider.canDelete(#id))")
+    @PreAuthorize(value = "@permission.validate(@fooPermissionProvider.canDelete(@fooFacade.getOne(#id)))")
     public void delete(@PathVariable(value = "id") UUID id) {
         facade.delete(id);
     }

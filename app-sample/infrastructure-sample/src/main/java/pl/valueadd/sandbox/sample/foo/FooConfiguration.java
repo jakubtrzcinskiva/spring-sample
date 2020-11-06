@@ -8,9 +8,16 @@ import org.springframework.context.annotation.Bean;
 class FooConfiguration {
 
     @Bean
-    public FooFacade fooFacade(FooRepository domainRepo, EventDispatcher eventDispatcher) {
-        var service = new FooServiceImpl(domainRepo, fooPermissionProvider(), eventDispatcher);
-        return new DirectFooFacade(service, new FooCreator(service), new FooUpdater(service), new FooRemover(service));
+    public FooFacade fooFacade(FooRepository domainRepo, EventDispatcher eventDispatcher, FooMapper mapper) {
+        var service = new FooServiceImpl(domainRepo, eventDispatcher, mapper);
+        return new DirectFooFacade(
+                service,
+                new FooCreator(service, mapper),
+                new FooUpdater(service, mapper),
+                new FooRemover(service),
+                mapper,
+                fooPermissionProvider()
+        );
     }
 
     @Bean
